@@ -1,20 +1,99 @@
-// Num-System.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+char singleDigitPreprocees(int number)
+{
+    if (number < 10)
+    {
+        return number + '0';
+    }
+    else if (number >= 10)
+    {
+        return 'A' + (number - 10);
+    }
+}
+
+string decimalTo(int decimal, int base = 16)
+{
+    int tempDecimal = decimal;
+    stack<char> remainders;
+
+    if (tempDecimal == 0)
+    {
+        return "0";
+    }
+
+    while (tempDecimal > 0)
+    {
+        char rem = singleDigitPreprocees(tempDecimal % base);
+        tempDecimal = tempDecimal / base;
+        remainders.push(rem);
+    }
+
+    string anyBase = "";
+
+    while (!remainders.empty())
+    {
+        anyBase += remainders.top();
+        remainders.pop();
+    }
+
+    return anyBase;
+}
+
+class Num
+{
+protected:
+    int num;
+
+public:
+    Num(int num)
+    {
+        this->num = num;
+    }
+
+public:
+    virtual void showNum()
+    {
+        cout << num << endl;
+    }
+};
+
+class Outhex : public Num
+{
+public:
+    Outhex(int num) : Num(num) {}
+
+public:
+    void showNum()
+    {
+        cout << decimalTo(Num::num, 16) << endl;
+    }
+};
+
+class Outoct : public Num
+{
+public:
+    Outoct(int num) : Num(num) {}
+
+public:
+    void showNum()
+    {
+        cout << decimalTo(Num::num, 8) << endl;
+    }
+};
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    Num num = Num(20);
+    num.showNum();
+
+    Outhex outhex = Outhex(20);
+    outhex.showNum();
+
+    Outoct outoct = Outoct(20);
+    outoct.showNum();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
